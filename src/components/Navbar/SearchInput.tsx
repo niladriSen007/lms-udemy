@@ -20,7 +20,7 @@ const SearchInput = ({
         }}
       />
       <button
-        className="bg-blue-600 rounded-r-md border-none outline-none cursor-pointer px-4 py-3 hover:bg-[#FDAB04]/80"
+        className="bg-blue-600 rounded-r-md border-none outline-none cursor-pointer px-4 py-3 hover:bg-blue-700"
         disabled={searchInput.trim() === ""}
         /* onClick={handleSearch} */
       >
