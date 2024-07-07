@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Course {
+  csId         String    @id @default(uuid())
+  instructorId String
+  title        String    @db.Text
+  subTitle     String?   @db.Text
+  description  String?   @db.Text
+  imageUrl     String?
+  price        Float
+  isPublished  Boolean   @default(false)
+  comments     Comment[]
+
+  category   Category? @relation(fields: [categoryId], references: [catId])
+  categoryId String?
+
+  subCategory   SubCategory? @relation(fields: [subCategoryId], references: [subCatId])
+  subCategoryId String?
+
+  Level   Level?  @relation(fields: [levelId], references: [lvlId])
+  levelId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@index([categoryId])
+  @@index([subCategoryId])
+  @@index([levelId])
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  userId    String
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+
+  course   Course @relation(fields: [courseId], references: [csId])
+  courseId String
+
+  @@index([courseId])
+}
+
+model Category {
+  catId         String        @id @default(uuid())
+  name          String        
+  subCategories SubCategory[]
+  courses       Course[]
+}
+
+model SubCategory {
+  subCatId String @id @default(uuid())
+  name     String 
+
+  category   Category @relation(fields: [categoryId], references: [catId])
+  categoryId String
+
+  course Course[]
+
+  @@index([categoryId])
+}
+
+model Level {
+  lvlId   String   @id @default(uuid())
+  name    String   @unique
+  courses Course[]
+}
