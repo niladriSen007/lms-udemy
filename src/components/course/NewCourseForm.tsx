@@ -15,6 +15,9 @@ import {
 import { Input } from "@/components/ui/input"
 import { Combobox } from "../custom/ComboBox"
 import ShimmerButton from "../magicui/shimmer-button"
+import axios from "axios"
+import { useRouter } from "next/navigation"
+import toast from "react-hot-toast"
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -45,16 +48,21 @@ const NewCourseForm = ({ categories }: NewCourseFormProps) => {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+  const router = useRouter()
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const { data } = await axios.post("/api/course", values)
+    console.log(data)
+
+    router.push("/instructor/courses")
+    toast.success("Course created successfully")
+    /* router.push(`/instructor/courses/${data.id}`) */
   }
 
   return (
     <div className="p-10">
       <h1 className="text-4xl font-bold">
-        Let give some basics for your course
+        Let give some basics of your course
       </h1>
       <p className="text-lg mt-3">
         It is ok if you cannot think of a good title or correct category now.
@@ -117,8 +125,8 @@ const NewCourseForm = ({ categories }: NewCourseFormProps) => {
             )}
           />
           <ShimmerButton
-          borderRadius="10px"
-          background="#1D4ED8"
+            borderRadius="10px"
+            background="#1D4ED8"
             type="submit"
             className="shadow-2xl px-4 py-1 rounded-none"
           >
