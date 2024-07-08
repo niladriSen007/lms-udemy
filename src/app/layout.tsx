@@ -8,6 +8,7 @@ import {
   SignedOut,
   UserButton,
 } from "@clerk/nextjs"
+import ToastProvider from "@/components/providers/ToastProvider"
 
 const inter = Signika_Negative({ subsets: ["latin"] })
 
@@ -24,7 +25,10 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={inter.className}>{children}</body>
+        <body className={inter.className}>
+          <ToastProvider />
+          {children}
+        </body>
       </html>
     </ClerkProvider>
   )
