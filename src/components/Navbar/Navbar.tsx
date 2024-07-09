@@ -6,10 +6,12 @@ import { useState } from "react"
 import { Button } from "../ui/button"
 import MobileSidebar from "./MobileSidebar"
 import SearchInput from "./SearchInput"
+import { Loader2 } from "lucide-react"
 
 const Navbar = () => {
   const [searchInput, setsearchInput] = useState("")
-  const { isSignedIn } = useAuth()
+  const { isSignedIn, isLoaded } = useAuth()
+/*   console.log(isLoaded) */
   const topRoutes = [
     { label: "Instructor", path: "/instructor/courses" },
     { label: "Learning", path: "/learning" },
@@ -39,7 +41,9 @@ const Navbar = () => {
           ))}
         </div>
         <MobileSidebar />
-        {isSignedIn ? (
+        {!isLoaded ? (
+          <Loader2 color="blue" className="h-4 w-4 animate-spin"/>
+        ) : isSignedIn ? (
           <UserButton afterSignOutUrl="/sign-in" />
         ) : (
           <Link href="/sign-in">

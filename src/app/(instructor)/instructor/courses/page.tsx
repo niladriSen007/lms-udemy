@@ -4,10 +4,14 @@ import { Plus } from "lucide-react"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import ShimmerButton from "@/components/magicui/shimmer-button"
+import { getInstructorCourses } from "@/actions/actions"
 
-const CoursesPage = () => {
+const CoursesPage = async () => {
   const { userId } = auth()
   if (!userId) return redirect("/sign-in")
+
+  const courses = await getInstructorCourses(userId)
+  console.log(courses)
   return (
     <div className="px-6 py-4">
       <Link href="/instructor/createcourse">
@@ -24,7 +28,17 @@ const CoursesPage = () => {
         </ShimmerButton>
       </Link>
 
-      <div className="mt-5"></div>
+      <div className="mt-5 flex flex-col gap-4">
+        
+        {courses?.map((course) => (
+          <Link
+            href={`/instructor/courses/${course.csId}/basic`}
+            key={course.csId}
+          >
+            {course.title}
+          </Link>
+        ))}
+      </div>
     </div>
   )
 }
