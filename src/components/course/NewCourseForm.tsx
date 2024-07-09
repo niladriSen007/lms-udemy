@@ -18,6 +18,7 @@ import ShimmerButton from "../magicui/shimmer-button"
 import axios from "axios"
 import { useRouter } from "next/navigation"
 import toast from "react-hot-toast"
+import { Loader2 } from "lucide-react"
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -51,11 +52,16 @@ const NewCourseForm = ({ categories }: NewCourseFormProps) => {
   const router = useRouter()
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const { data } = await axios.post("/api/course", values)
-    console.log(data)
+    try {
+      const { data } = await axios.post("/api/course", values)
+      console.log(data)
 
-    router.push("/instructor/courses")
-    toast.success("Course created successfully")
+      router.push(`/instructor/courses/${data.id}/basic`)
+      toast.success("Course created successfully")
+    } catch (error) {
+      console.log("Error occured", error)
+      toast.error("An error occurred")
+    }
     /* router.push(`/instructor/courses/${data.id}`) */
   }
 
@@ -129,10 +135,15 @@ const NewCourseForm = ({ categories }: NewCourseFormProps) => {
             background="#1D4ED8"
             type="submit"
             className="shadow-2xl px-4 py-1 rounded-none"
+            disabled={form.formState.isSubmitting || !form.formState.isValid}
           >
-            <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white  lg:text-lg">
-              Create course
-            </span>
+            {form.formState.isSubmitting ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white  lg:text-lg">
+                Create course
+              </span>
+            )}
           </ShimmerButton>
         </form>
       </Form>
