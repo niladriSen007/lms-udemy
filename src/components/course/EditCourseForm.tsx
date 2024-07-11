@@ -18,6 +18,12 @@ import { Category, Course } from "@prisma/client"
 import { CoolMode } from "../magicui/cool-mode"
 import RichEditor from "../custom/RichEditor"
 import { Combobox } from "../custom/ComboBox"
+import ImageorFileUpload from "../custom/ImageorFileUpload"
+import Link from "next/link"
+import { Loader2 } from "lucide-react"
+import axios from "axios"
+import toast from "react-hot-toast"
+import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -66,13 +72,22 @@ const EditCourseForm = ({
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+  const router = useRouter()
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const { data } = await axios.put(`/api/course/${course?.csId}`, values)
+      toast.success("Course updated successfully")
+      router.refresh()
+    } catch (error) {
+      console.log("Failed to update the course", error)
+      toast.error("Something went wrong!")
+    }
   }
+
+  const { isSubmitting, isValid } = form.formState
   return (
-    <div>
+    <div className="my-10">
       {" "}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -187,6 +202,27 @@ const EditCourseForm = ({
 
           <FormField
             control={form.control}
+            name="imageUrl"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>
+                  Couse Banner <span className="text-red-500">*</span>
+                </FormLabel>
+                <FormControl>
+                  <ImageorFileUpload
+                    value={field.value || ""}
+                    onChange={(url) => field.onChange(url)}
+                    endpoint="courseBanner"
+                    page="Edit Course"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
             name="price"
             render={({ field }) => (
               <FormItem>
@@ -205,15 +241,28 @@ const EditCourseForm = ({
               </FormItem>
             )}
           />
-
-          <CoolMode>
-            <Button
-              type="submit"
-              className="bg-gradient-to-b from-[rgba(7,7,9,1)] to-[rgba(27,24,113,1)] shadow-lg text-white"
-            >
-              Submit
-            </Button>
-          </CoolMode>
+          <div className="flex gap-5">
+            <Link href="/instructor/courses">
+              <Button variant="outline" type="button">
+                Cancel
+              </Button>
+            </Link>
+            <CoolMode>
+              <Button
+                type="submit"
+                className="bg-gradient-to-b from-[rgba(7,7,9,1)] to-[rgba(27,24,113,1)] shadow-lg text-white"
+                disabled={!isValid || isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  </>
+                ) : (
+                  "Submit"
+                )}
+              </Button>
+            </CoolMode>
+          </div>
         </form>
       </Form>
     </div>
