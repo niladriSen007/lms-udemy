@@ -17,7 +17,7 @@ const Sidebar = () => {
   ]
 
   return (
-    <div className="max-sm:hidden flex flex-col w-64 border-r shadow-md px-3 my-4 gap-4 text-sm font-medium">
+    <div className="max-sm:hidden flex h-screen flex-col w-64 border-r shadow-md px-3 my-4 gap-4 text-sm font-medium fixed  left-0 top-20">
       {sidebarRoutes.map((route) => (
         <Link
           href={route.path}

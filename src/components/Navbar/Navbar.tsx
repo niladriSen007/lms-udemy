@@ -17,7 +17,7 @@ const Navbar = () => {
     { label: "Learning", path: "/learning" },
   ]
   return (
-    <div className="flex items-center justify-between px-8 h-16">
+    <div className="flex items-center justify-between px-8 h-20 py-4 sticky bg-white top-0 z-50 shadow-md">
       <Link href={"/"}>
         <Image
           src="/av.png"

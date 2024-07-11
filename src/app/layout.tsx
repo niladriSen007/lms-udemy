@@ -1,14 +1,14 @@
-import type { Metadata } from "next"
-import { Inter, Signika_Negative } from "next/font/google"
-import "./globals.css"
+import ToastProvider from "@/components/providers/ToastProvider";
 import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs"
-import ToastProvider from "@/components/providers/ToastProvider"
+  ClerkProvider
+} from "@clerk/nextjs";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import "@uploadthing/react/styles.css";
+import type { Metadata } from "next";
+import { Signika_Negative } from "next/font/google";
+import { extractRouterConfig } from "uploadthing/server";
+import { ourFileRouter } from "./api/uploadthing/core";
+import "./globals.css";
 
 const inter = Signika_Negative({ subsets: ["latin"] })
 
@@ -26,6 +26,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className={inter.className}>
+          <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
           <ToastProvider />
           {children}
         </body>
