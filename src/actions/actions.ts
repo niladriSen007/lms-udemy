@@ -1,6 +1,7 @@
 "use server"
 
 import { prismaDb } from "@/lib/db"
+import { redirect } from "next/navigation"
 
 export const getAllCategories = async () => {
   return await prismaDb.category.findMany({
@@ -25,6 +26,13 @@ export const getInstructorCourses = async (userId: string) => {
 }
 
 export const getCourseDetails = async (courseId: string, userId: string) => {
+  if (!courseId) {
+    return null
+  }
+
+  if(!userId) {
+   return redirect("/sign-in")
+  }
   return await prismaDb.course.findUnique({
     where: {
       csId: courseId,

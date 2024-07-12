@@ -6,6 +6,14 @@ html,
 body,
 :root {
   height: 100%;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
 }
 
 @layer base {
@@ -81,6 +89,6 @@ body,
   }
 }
 
-.cl-formButtonPrimary{
-  @apply bg-blue-600 border-none focus:outline-none  hover:bg-blue-600 hover:border-2 hover:border-blue-700 transition-all duration-300 ;
+.cl-formButtonPrimary {
+  @apply bg-blue-600 border-none focus:outline-none  hover:bg-blue-600 hover:border-2 hover:border-blue-700 transition-all duration-300;
 }

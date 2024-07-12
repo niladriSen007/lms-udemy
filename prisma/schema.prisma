@@ -34,8 +34,9 @@ model Course {
   Level   Level?  @relation(fields: [levelId], references: [lvlId])
   levelId String?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  Section   Section[]
 
   @@index([categoryId])
   @@index([subCategoryId])
@@ -56,14 +57,14 @@ model Comment {
 
 model Category {
   catId         String        @id @default(uuid())
-  name          String        
+  name          String
   subCategories SubCategory[]
   courses       Course[]
 }
 
 model SubCategory {
   subCatId String @id @default(uuid())
-  name     String 
+  name     String
 
   category   Category @relation(fields: [categoryId], references: [catId])
   categoryId String
@@ -78,3 +79,28 @@ model Level {
   name    String   @unique
   courses Course[]
 }
+
+model Section {
+  secId       String   @id @default(uuid())
+  title       String
+  description String?
+  videoUrl    String?
+  isPublished Boolean  @default(false)
+  isFree      Boolean  @default(false)
+  position    Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+
+   muxData MuxData?
+
+  resources Resource[]
+
+  progress Progress[]
+
+  course   Course @relation(fields: [courseId], references: [csId],onDelete: Cascade)
+  courseId String
+
+  @@index([courseId])
+}
+
+
