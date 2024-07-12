@@ -64,8 +64,14 @@ const config = {
         "accordion-up": "accordion-up 0.2s ease-out",
         "spin-around": "spin-around calc(var(--speed) * 2) infinite linear",
         slide: "slide var(--speed) ease-in-out infinite alternate",
+        "blink-red": "blink-red 2s infinite linear",
+        sparkle: "sparkle 2s ease-in-out infinite",
       },
       keyframes: {
+        sparkle: {
+          "0%, 100%": { opacity: "0.75", scale: "0.9" },
+          "50%": { opacity: "1", scale: "1" },
+        },
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -73,6 +79,16 @@ const config = {
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
+        },
+        "blink-red": {
+          "0%, 100%": {
+            backgroundColor: "rgba(239, 68, 68, 0.7)",
+            boxShadow: "0 0 30px 10px rgba(239, 68, 68, 0.5)",
+          },
+          "50%": {
+            backgroundColor: "rgba(239, 68, 68, 0.5)",
+            boxShadow: "0 0 30px 10px rgba(239, 68, 68, 1)",
+          },
         },
         "spin-around": {
           "0%": {
@@ -87,12 +103,17 @@ const config = {
           "100%": {
             transform: "translateZ(0) rotate(360deg)",
           },
+          
         },
         slide: {
           to: {
             transform: "translate(calc(100cqw - 100%), 0)",
           },
         },
+      },
+      backgroundImage: {
+        striped:
+          "repeating-linear-gradient(45deg, #3B3A3D, #3B3A3D 5px, transparent 5px, transparent 20px)",
       },
     },
   },

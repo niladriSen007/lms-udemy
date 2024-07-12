@@ -1,29 +1,31 @@
 "use client"
 
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Category, Course } from "@prisma/client"
-import { CoolMode } from "../magicui/cool-mode"
-import RichEditor from "../custom/RichEditor"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Course } from "@prisma/client"
+import axios from "axios"
+import { Loader2 } from "lucide-react"
+import Link from "next/link"
+import { usePathname, useRouter } from "next/navigation"
+import { useForm } from "react-hook-form"
+import toast from "react-hot-toast"
+import { z } from "zod"
 import { Combobox } from "../custom/ComboBox"
 import ImageorFileUpload from "../custom/ImageorFileUpload"
-import Link from "next/link"
-import { Loader2 } from "lucide-react"
-import axios from "axios"
-import toast from "react-hot-toast"
-import { useRouter } from "next/navigation"
+import RichEditor from "../custom/RichEditor"
+import { CoolMode } from "../magicui/cool-mode"
+import ShiningButton from "../animata/button/shining-button"
+import AiButton from "../animata/button/ai-button"
+import Delete from "../custom/Delete"
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -73,6 +75,7 @@ const EditCourseForm = ({
   })
 
   const router = useRouter()
+  const pathname = usePathname()
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
@@ -86,9 +89,46 @@ const EditCourseForm = ({
   }
 
   const { isSubmitting, isValid } = form.formState
+
+  const routes = [
+    {
+      label: "Basic Information",
+      path: `/instructor/courses/${course?.csId}/basic`,
+    },
+    {
+      label: "Curriculum",
+      path: `/instructor/courses/${course?.csId}/sections`,
+    },
+  ]
   return (
     <div className="my-10">
-      {" "}
+      <div className="flex flex-col gap-2 sm:flex-row sm:justify-between mb-7">
+        <div className="flex gap-5">
+          {routes.map((route) => (
+            <Link key={route.path} href={route.path}>
+              <div>
+                <ShiningButton
+                  label={route.label}
+                  path={pathname}
+                  url={route.path}
+                />
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        <div className="flex gap-4 items-center">
+          <AiButton
+            /*  disabled={!isCompleted} */
+            disabled={false}
+            courseId={course.csId}
+            isPublished={course.isPublished}
+            page="Course"
+          />
+
+          <Delete item="course" courseId={course.csId} />
+        </div>
+      </div>{" "}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
@@ -250,7 +290,7 @@ const EditCourseForm = ({
             <CoolMode>
               <Button
                 type="submit"
-                className="bg-gradient-to-b from-[rgba(7,7,9,1)] to-[rgba(27,24,113,1)] shadow-lg text-white"
+                className="bg-blue-600 hover:bg-blue-700 transition-all duration-300 shadow-lg text-white"
                 disabled={!isValid || isSubmitting}
               >
                 {isSubmitting ? (
