@@ -31,12 +31,13 @@ model Course {
   subCategory   SubCategory? @relation(fields: [subCategoryId], references: [subCatId])
   subCategoryId String?
 
-  Level   Level?  @relation(fields: [levelId], references: [lvlId])
+  section Section[]
+  
+  Level   Level?    @relation(fields: [levelId], references: [lvlId])
   levelId String?
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now())
-  Section   Section[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 
   @@index([categoryId])
   @@index([subCategoryId])
@@ -83,24 +84,61 @@ model Level {
 model Section {
   secId       String   @id @default(uuid())
   title       String
-  description String?
-  videoUrl    String?
+  description String?  @db.Text
+  videoUrl    String?  @db.Text
   isPublished Boolean  @default(false)
   isFree      Boolean  @default(false)
   position    Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
 
-   muxData MuxData?
+  muxData MuxData?
 
   resources Resource[]
 
   progress Progress[]
 
-  course   Course @relation(fields: [courseId], references: [csId],onDelete: Cascade)
+  course   Course @relation(fields: [courseId], references: [csId], onDelete: Cascade)
   courseId String
 
   @@index([courseId])
 }
 
+model MuxData {
+  id         String   @id @default(uuid())
+  playbackId String
+  assetId    String
+  createdAt  DateTime @default(now())
 
+  section   Section @relation(fields: [sectionId], references: [secId], onDelete: Cascade)
+  sectionId String  @unique
+
+  @@index([sectionId])
+}
+
+model Resource {
+  id        String   @id @default(uuid())
+  name      String
+  fileUrl   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  section   Section @relation(fields: [sectionId], references: [secId], onDelete: Cascade)
+  sectionId String
+
+  @@index([sectionId])
+}
+
+model Progress {
+  id          String   @id @default(uuid())
+  studentId   String   @unique
+  isCompleted Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+
+  section   Section @relation(fields: [sectionId], references: [secId], onDelete: Cascade)
+  sectionId String
+
+  @@unique([studentId, sectionId])
+  @@index([sectionId])
+}
