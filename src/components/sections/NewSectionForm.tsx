@@ -1,8 +1,8 @@
 "use client"
-import { Course } from "@prisma/client"
+import { Course, Section } from "@prisma/client"
 import Link from "next/link"
 import ShiningButton from "../animata/button/shining-button"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -19,6 +19,9 @@ import {
 import { Input } from "@/components/ui/input"
 import { Loader2 } from "lucide-react"
 import { CoolMode } from "../magicui/cool-mode"
+import toast from "react-hot-toast"
+import axios from "axios"
+import SectionList from "./SectionList"
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -27,7 +30,7 @@ const formSchema = z.object({
 })
 
 interface NewSectionFormProps {
-  course: Course
+  course: Course  & { section: Section[] }
 }
 const NewSectionForm = ({ course }: NewSectionFormProps) => {
   const routes = [
@@ -42,6 +45,7 @@ const NewSectionForm = ({ course }: NewSectionFormProps) => {
   ]
 
   const pathname = usePathname()
+  const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -51,11 +55,21 @@ const NewSectionForm = ({ course }: NewSectionFormProps) => {
   })
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const { data } = await axios.post(
+        `/api/course/${course.csId}/sections`,
+        values
+      )
+      console.log(data)
+      toast.success("Section created successfully")
+      router.push(`/instructor/courses/${course.csId}/sections/${data?.secId}`)
+    } catch (error: any) {
+      toast.error(error.message)
+    }
   }
+
+  const reorder = (updateData: { id: string; position: number }[]) => {}
 
   const { isValid, isSubmitting } = form.formState
   return (
@@ -73,6 +87,14 @@ const NewSectionForm = ({ course }: NewSectionFormProps) => {
           </Link>
         ))}
       </div>
+
+      <SectionList 
+      items={course?.section || []} 
+      onReorder={reorder}
+       onEdit={(id) =>
+        router.push(`/instructor/courses/${course.csId}/sections/${id}`)
+      }
+      />
 
       <h1 className="text-xl font-bold mt-5">Add New Section</h1>
 
