@@ -30,7 +30,7 @@ const formSchema = z.object({
 })
 
 interface NewSectionFormProps {
-  course: Course  & { section: Section[] }
+  course: Course & { section: Section[] }
 }
 const NewSectionForm = ({ course }: NewSectionFormProps) => {
   const routes = [
@@ -69,7 +69,16 @@ const NewSectionForm = ({ course }: NewSectionFormProps) => {
     }
   }
 
-  const reorder = (updateData: { id: string; position: number }[]) => {}
+  const reorder = (updateData: { id: string; position: number }[]) => {
+    try {
+      const {} = axios.put(`/api/course/${course.csId}/sections/reorder`, {
+        list: updateData,
+      })
+      toast.success("Sections reordered successfully")
+    } catch (error: any) {
+      toast.error(error.message)
+    }
+  }
 
   const { isValid, isSubmitting } = form.formState
   return (
@@ -88,12 +97,12 @@ const NewSectionForm = ({ course }: NewSectionFormProps) => {
         ))}
       </div>
 
-      <SectionList 
-      items={course?.section || []} 
-      onReorder={reorder}
-       onEdit={(id) =>
-        router.push(`/instructor/courses/${course.csId}/sections/${id}`)
-      }
+      <SectionList
+        items={course?.section || []}
+        onReorder={reorder}
+        onEdit={(id) =>
+          router.push(`/instructor/courses/${course.csId}/sections/${id}`)
+        }
       />
 
       <h1 className="text-xl font-bold mt-5">Add New Section</h1>
