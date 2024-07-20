@@ -105,7 +105,7 @@ model Section {
 }
 
 model MuxData {
-  id         String   @id @default(uuid())
+  muxId         String   @id @default(uuid())
   playbackId String
   assetId    String
   createdAt  DateTime @default(now())
@@ -117,7 +117,7 @@ model MuxData {
 }
 
 model Resource {
-  id        String   @id @default(uuid())
+  resourceId        String   @id @default(uuid())
   name      String
   fileUrl   String
   createdAt DateTime @default(now())
@@ -130,7 +130,7 @@ model Resource {
 }
 
 model Progress {
-  id          String   @id @default(uuid())
+  modelId          String   @id @default(uuid())
   studentId   String   @unique
   isCompleted Boolean  @default(false)
   createdAt   DateTime @default(now())

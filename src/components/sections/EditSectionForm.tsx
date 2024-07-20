@@ -1,6 +1,7 @@
 "use client"
 
 import { z } from "zod"
+import MuxPlayer from "@mux/mux-player-react";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { MuxData, Resource, Section } from "@prisma/client"
@@ -26,6 +27,7 @@ import ImageorFileUpload from "../custom/ImageorFileUpload"
 import { Switch } from "../ui/switch"
 import AiButton from "../animata/button/ai-button"
 import Delete from "../custom/Delete"
+import ResourceForm from "./ResourceForm"
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -65,20 +67,28 @@ const EditSectionForm = ({
   const { isValid, isSubmitting } = form.formState
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+    try {
+      const { data } = await axios.put(`/api/course/${courseId}/sections/${section.secId}`, values)
+      toast.success("Section updated successfully")
+      router.refresh()
+    } catch (error: any) {
+      console.error(error)
+      toast.error(error.message)
+
+    }
   }
   return (
     <div className="p-10">
       <div className="flex items-center justify-between">
 
-      <Link href={`/instructor/courses/${courseId}/sections`}>
-        <Button className="text-sm font-medium bg-slate-500 transition-all duration-300 hover:bg-slate-600 mb-6">
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to curriculum
-        </Button>
-      </Link>
+        <Link href={`/instructor/courses/${courseId}/sections`}>
+          <Button className="text-sm font-medium bg-slate-500 transition-all duration-300 hover:bg-slate-600 mb-6">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to curriculum
+          </Button>
+        </Link>
 
-      <div className="flex gap-4 items-center">
+        <div className="flex gap-4 items-center">
           <AiButton
             /*  disabled={!isCompleted} */
             sectionId={section.secId}
@@ -136,6 +146,15 @@ const EditSectionForm = ({
             )}
           />
 
+          {section.videoUrl && (
+            <div className="my-5">
+              <MuxPlayer
+                playbackId={section.muxData?.playbackId || ""}
+                className="md:max-w-[600px]"
+              />
+            </div>
+          )}
+
           <FormField
             control={form.control}
             name="videoUrl"
@@ -162,9 +181,8 @@ const EditSectionForm = ({
             name="isFree"
             render={({ field }) => (
               <FormItem
-                className={`flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm ${
-                  field.value == true ? "bg-white border border-gray-300" : "bg-gray-300"
-                }`}
+                className={`flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm ${field.value == true ? "bg-white border border-gray-300" : "bg-gray-300"
+                  }`}
               >
                 <div className="space-y-0.5">
                   <FormLabel>Accessibility</FormLabel>
@@ -182,6 +200,8 @@ const EditSectionForm = ({
             )}
           />
 
+
+
           <div className="flex gap-5">
             <Link href={`/instructor/courses/${courseId}/sections`}>
               <Button variant="outline" type="button">
@@ -198,6 +218,8 @@ const EditSectionForm = ({
           </div>
         </form>
       </Form>
+
+      <ResourceForm courseId={courseId} section={section} />
     </div>
   )
 }

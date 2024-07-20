@@ -61,9 +61,9 @@ const NewSectionForm = ({ course }: NewSectionFormProps) => {
         `/api/course/${course.csId}/sections`,
         values
       )
-      console.log(data)
+     /*  console.log(data) */
       toast.success("Section created successfully")
-      router.push(`/instructor/courses/${course.csId}/sections/${data?.secId}`)
+    router.refresh()
     } catch (error: any) {
       toast.error(error.message)
     }

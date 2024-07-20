@@ -19,7 +19,7 @@ const ImageorFileUpload = ({
   page,
 }: ImageorFileUploadProps) => {
   return (
-    <div className="flex  gap-2">
+    <div className="flex  gap-2 flex-col">
        {page === "Edit Course" && value !== "" && (
         <Image
           src={value}
