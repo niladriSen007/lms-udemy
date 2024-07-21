@@ -24,9 +24,9 @@ const ImageorFileUpload = ({
         <Image
           src={value}
           alt="image"
-          width={500}
-          height={500}
-          className="w-[280px] h-[200px] object-cover rounded-xl shadow-md"
+          width={2500}
+          height={2500}
+          className="w-[500px] object-cover rounded-xl shadow-md"
         />
       )}
 

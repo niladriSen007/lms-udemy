@@ -4,6 +4,9 @@ import { loadFull } from "tsparticles";
 
 import type { ISourceOptions } from "@tsparticles/engine";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const options: ISourceOptions = {
   key: "star",
@@ -109,16 +112,18 @@ const options: ISourceOptions = {
 
 interface AiButtonProps {
   isPublished: boolean;
-  disabled : boolean;
+  disabled: boolean;
   sectionId?: string;
   courseId: string;
   page: string;
 }
 
-export default function AiButton({isPublished,disabled,courseId,page,sectionId} : AiButtonProps) {
+export default function AiButton({ isPublished, disabled, courseId, page, sectionId }: AiButtonProps) {
   const [particleState, setParticlesReady] = useState<"loaded" | "ready">();
   const [isHovering, setIsHovering] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     initParticlesEngine(async (engine) => {
@@ -133,38 +138,41 @@ export default function AiButton({isPublished,disabled,courseId,page,sectionId} 
     return options;
   }, [isHovering]);
 
+  const handleClick = async () => {
+    let url = `/api/course/${courseId}`;
+    if (page === "Section") {
+      url += `/sections/${sectionId}`;
+    }
+    try {
+      setIsLoading(true);
+      isPublished ? await axios.post(url + "/unpublish") : await axios.post(url + "/publish");
+      toast.success(`${isPublished ? "Unpublished" : "Published"} ${page}`);
+      router.refresh();
+    } catch (error: any) {
+      toast.error(error.response?.data?.error || error.message);
+      console.log(
+        `Failed to ${isPublished ? "unpublish" : "publish"} ${page}`,
+        error
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <button
-      className="group relative rounded-md bg-gradient-to-r from-blue-300/30 via-blue-500/30 via-40% to-purple-500/30 p-1 text-white transition-transform "
+      className={`group relative rounded-md bg-gradient-to-r ${!isPublished ? "bg-gradient-to-r from-sky-500 to-blue-700" : "bg-gradient-to-r from-orange-600 to-yellow-600"} p-1 text-white transition-transform`}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
       disabled={disabled || isLoading}
-      onClick={()=>{}}
+      onClick={handleClick}
     >
-      <div className="relative flex items-center justify-center gap-2 rounded-md bg-gradient-to-r from-blue-500 via-blue-500 via-40% to-purple-500 px-4 py-1.5 text-white">
-        <Sparkle className="size-6 -translate-y-0.5 animate-sparkle fill-white" />
-        <Sparkle
-          style={{
-            animationDelay: "1s",
-          }}
-          className="absolute bottom-2.5 left-3.5 z-20 size-2 rotate-12 animate-sparkle fill-white"
-        />
-        <Sparkle
-          style={{
-            animationDelay: "1.5s",
-            animationDuration: "2.5s",
-          }}
-          className="absolute left-5 top-2.5 size-1 -rotate-12 animate-sparkle fill-white"
-        />
-        <Sparkle
-          style={{
-            animationDelay: "0.5s",
-            animationDuration: "2.5s",
-          }}
-          className="absolute left-3 top-3 size-1.5 animate-sparkle fill-white"
-        />
+      <div className="relative flex items-center justify-center gap-2 rounded-md bg-gradient-to-r  px-4 py-0.5 text-white">
 
-        <span className="font-semibold">  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : isPublished ? "Unpublish" : "Publish"}</span>
+
+
+
+        <span className="font-semibold">  {isLoading ? <Loader2 className="h-4 w-4 my-1 animate-spin" /> : isPublished ? "Unpublish" : "Publish"}</span>
       </div>
       {!!particleState && (
         <Particles

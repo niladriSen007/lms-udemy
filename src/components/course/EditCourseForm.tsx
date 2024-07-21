@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Course } from "@prisma/client"
+import { Course, Section } from "@prisma/client"
 import axios from "axios"
 import { Loader2 } from "lucide-react"
 import Link from "next/link"
@@ -45,14 +45,14 @@ const formSchema = z.object({
 })
 
 interface EditCourseFormProps {
-  course: Course
+  course: Course & { section : Section[] }
   categories: {
     label: string // name of category
     value: string // categoryId
     subCategories: { label: string; value: string }[]
   }[]
   levels: { label: string; value: string }[]
-  /*  isCompleted: boolean; */
+   isCompleted?: boolean;
 }
 
 const EditCourseForm = ({

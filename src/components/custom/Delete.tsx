@@ -14,6 +14,8 @@ import { Button } from "../ui/button"
 import { Loader2, Trash } from "lucide-react"
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import toast from "react-hot-toast";
 interface DeleteProps {
   item: string;
   courseId: string;
@@ -24,6 +26,25 @@ const Delete = ({ item, courseId, sectionId }: DeleteProps) => {
 
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const onDelete = async () => {
+    setIsDeleting(true)
+    try {
+      const apiUrl = item === "course" ? `/api/course/${courseId}` : `/api/course/${courseId}/sections/${sectionId}`
+      await axios.delete(apiUrl)
+
+      setIsDeleting(false)
+
+      const pushedUrl = item === "course" ? "/instructor/courses" : `/instructor/courses/${courseId}/sections`
+      router.push(pushedUrl)
+      router.refresh()
+      toast.success(`${item} deleted successfully`)
+    } catch (error) {
+      toast.error(`Something went wrong!`);
+      console.log(`Failed to delete the ${item}`, error);
+    }
+  }
+
   return (
     <AlertDialog>
       <AlertDialogTrigger>
@@ -47,8 +68,8 @@ const Delete = ({ item, courseId, sectionId }: DeleteProps) => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction className="bg-[#FDAB04]"
-           /* onClick={onDelete} */
+          <AlertDialogAction className="bg-blue-600 hover:bg-blue-700"
+            onClick={onDelete}
           >Delete</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -71,6 +71,8 @@ const EditSectionForm = ({
       const { data } = await axios.put(`/api/course/${courseId}/sections/${section.secId}`, values)
       toast.success("Section updated successfully")
       router.refresh()
+     /*  if (data.success)
+        router.push(`/instructor/courses/${courseId}/sections`) */
     } catch (error: any) {
       console.error(error)
       toast.error(error.message)
@@ -78,7 +80,7 @@ const EditSectionForm = ({
     }
   }
   return (
-    <div className="p-10">
+    <div className="py-6">
       <div className="flex items-center justify-between">
 
         <Link href={`/instructor/courses/${courseId}/sections`}>
@@ -98,7 +100,7 @@ const EditSectionForm = ({
             page="Section"
           />
 
-          <Delete item="course" courseId={courseId} />
+          <Delete item="section" courseId={courseId} sectionId={section?.secId} />
         </div>
       </div>
       <h1 className="text-xl font-bold">Section Details</h1>
@@ -161,7 +163,7 @@ const EditSectionForm = ({
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>
-                  Video <span className="text-red-500">*</span>
+                  Video
                 </FormLabel>
                 <FormControl>
                   <ImageorFileUpload
@@ -208,7 +210,7 @@ const EditSectionForm = ({
                 Cancel
               </Button>
             </Link>
-            <Button type="submit" disabled={!isValid || isSubmitting}>
+            <Button type="submit" disabled={!isValid || isSubmitting} className="bg-gradient-to-r from-sky-500 to-blue-700">
               {isSubmitting ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (

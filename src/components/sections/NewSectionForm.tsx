@@ -63,6 +63,7 @@ const NewSectionForm = ({ course }: NewSectionFormProps) => {
       )
      /*  console.log(data) */
       toast.success("Section created successfully")
+      form.reset()
     router.refresh()
     } catch (error: any) {
       toast.error(error.message)
