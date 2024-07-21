@@ -55,6 +55,7 @@ const NewCourseForm = ({ categories }: NewCourseFormProps) => {
     try {
       const { data } = await axios.post("/api/course", values)
       console.log(data)
+      form.reset()
       router.refresh()
       toast.success("Course created successfully")
     } catch (error) {

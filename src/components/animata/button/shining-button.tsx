@@ -15,7 +15,7 @@ export default function ShiningButton({
     <button className="group cursor-pointer rounded-xl border-nonne border-orange-800 border-opacity-0 bg-transparent p-1 transition-all duration-500 hover:border-opacity-100">
       <div
         className={`relative flex items-center justify-center gap-4 overflow-hidden rounded-lg ${
-          url == path ? "bg-gradient-to-r from-yellow-500 to-orange-500 shadow-lg " : "bg-slate-500"
+          url == path ? "bg-gradient-to-r from-sky-400 to-blue-700 shadow-lg " : "bg-slate-500"
         } px-6 py-1.5 font-bold text-white`}
       >
         {label}
