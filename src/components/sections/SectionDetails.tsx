@@ -51,7 +51,7 @@ const SectionDetails = ({
         <h1 className="text-2xl font-bold max-md:mb-4">{section.title}</h1>
 
         <div className="flex gap-4">
-          <SectionMenu course={course} />
+        {/*   <SectionMenu course={course} /> */}
           {!purchase ? (
             <Button onClick={buyCourse} className="bg-gradient-to-r from-yellow-400 to-green-500 shadow-lg font-bold">
               {isLoading ? (

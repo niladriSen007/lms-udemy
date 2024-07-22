@@ -9,11 +9,11 @@ const Sidebar = () => {
 
   const sidebarRoutes = [
     { icon: <MonitorPlay />, label: "Courses", path: "/instructor/courses" },
-    {
+   /*  {
       icon: <BarChart4 />,
       label: "Performance",
       path: "/instructor/performance",
-    },
+    }, */
   ]
 
   return (

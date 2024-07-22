@@ -33,7 +33,7 @@ const CourseOverviewPage = async ({ params }: { params: { courseId: string } }) 
     <div className="flex flex-col items-start gap-4 py-4">
       <div className="flex items-start justify-between w-11/12">
         <Image className="w-[700px] h-96  object-cover" width={7500} height={7500} alt="course_image" src={courseDetails?.imageUrl!} />
-        <SectionMenu course={courseDetails!} />
+        {/* <SectionMenu course={courseDetails!} /> */}
       </div>
       <div className=" flex flex-col gap-5 text-sm items-start">
         <div className="flex justify-between">

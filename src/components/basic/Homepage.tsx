@@ -13,12 +13,17 @@ const Homepage = () => {
         <p>Working collaboratively to ensure every student achieves academically, scially and emotionaly.</p>
       </div>
       <div className="flex gap-4">
-        <Button className="bg-transparent hover:bg-slate-200 border-2 border-slate-300 text-black">
-          <Link href={"/categories/all"}>Search by category</Link>
-        </Button>
-        <Button className="bg-blue-600 hover:bg-blue-700 transition-all duration-300">
-          <Link href={"/courses"}>Explore Courses</Link>
-        </Button></div>
+        <Link href={"/categories/all"}>
+          <Button className="bg-transparent hover:bg-slate-200 border-2 border-slate-300 text-black">
+            Search by category
+          </Button>
+        </Link>
+        <Link href={"/courses"}>
+          <Button className="bg-blue-600 hover:bg-blue-700 transition-all duration-300">
+            Explore Courses
+          </Button>
+        </Link>
+      </div>
       <div className="flex items-center gap-10">
         <div className="flex items-center gap-2">
           <GraduationCap /> <span>Learn Anywhere</span>
