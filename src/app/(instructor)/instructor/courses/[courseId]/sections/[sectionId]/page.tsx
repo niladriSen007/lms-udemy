@@ -16,7 +16,7 @@ const SectionDetailsPage = async ({
     return redirect("/sign-in")
   }
 
-  const course = await getCourseDetails(courseId, userId!)
+  const course = await getCourseDetails(courseId)
   const section = await getSectionDetails(sectionId, courseId)
   const requiredFields = [section?.title, section?.description];
   const requiredFieldsCount = requiredFields.length;

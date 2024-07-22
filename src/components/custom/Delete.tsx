@@ -26,6 +26,7 @@ const Delete = ({ item, courseId, sectionId }: DeleteProps) => {
 
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
+  
 
   const onDelete = async () => {
     setIsDeleting(true)

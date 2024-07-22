@@ -11,7 +11,7 @@ import { redirect } from "next/navigation"
 const page = async ({ params }: { params: { courseId: string } }) => {
   const { userId } = auth()
   if (!userId) return redirect("/sign-in")
-  const course = await getCourseDetails(params.courseId, userId!)
+  const course = await getCourseDetails(params.courseId)
   const categories = await getAllCategories()
   const levels = await getLevels()
 

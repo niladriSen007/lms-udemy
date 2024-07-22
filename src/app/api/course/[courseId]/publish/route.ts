@@ -24,6 +24,13 @@ export async function POST(
       (section) => section.isPublished
     )
 
+    if(!isSectionsPublished) {
+      return NextResponse.json(
+        { error: "Any one section must be published to publish your course" },
+        { status: 404 }
+      )
+    }
+
     if (!course.title ||
       !course.description ||
       !course.categoryId ||

@@ -1,12 +1,12 @@
 import Navbar from "@/components/Navbar/Navbar"
 import { ReactNode } from "react"
 
-const HomeLayout = ({ children }: { children: ReactNode }) => {
+const CourseLayout = ({children} : {children : ReactNode}) => {
   return (
-    <div className="">
+    <div>
       <Navbar />
       {children}
     </div>
   )
 }
-export default HomeLayout
+export default CourseLayout

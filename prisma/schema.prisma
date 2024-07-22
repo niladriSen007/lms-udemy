@@ -32,8 +32,10 @@ model Course {
   subCategoryId String?
 
   section Section[]
-  
-  Level   Level?    @relation(fields: [levelId], references: [lvlId])
+
+    purchases Purchase[]
+
+  Level   Level?  @relation(fields: [levelId], references: [lvlId])
   levelId String?
 
   createdAt DateTime @default(now())
@@ -105,7 +107,7 @@ model Section {
 }
 
 model MuxData {
-  muxId         String   @id @default(uuid())
+  muxId      String   @id @default(uuid())
   playbackId String
   assetId    String
   createdAt  DateTime @default(now())
@@ -117,11 +119,11 @@ model MuxData {
 }
 
 model Resource {
-  resourceId        String   @id @default(uuid())
-  name      String
-  fileUrl   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  resourceId String   @id @default(uuid())
+  name       String
+  fileUrl    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
 
   section   Section @relation(fields: [sectionId], references: [secId], onDelete: Cascade)
   sectionId String
@@ -130,8 +132,8 @@ model Resource {
 }
 
 model Progress {
-  modelId          String   @id @default(uuid())
-  studentId   String   @unique
+  modelId     String   @id @default(uuid())
+  studentId   String   
   isCompleted Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
@@ -141,4 +143,28 @@ model Progress {
 
   @@unique([studentId, sectionId])
   @@index([sectionId])
+}
+
+model Purchase {
+  purchaseId         String @id @default(uuid())
+  customerId String
+
+  course   Course @relation(fields: [courseId], references: [csId], onDelete: Cascade)
+  courseId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@unique([customerId, courseId])
+  @@index([courseId])
+}
+
+
+model StripeCustomer {
+  id               String @id @default(uuid())
+  customerId       String @unique
+  stripeCustomerId String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 }

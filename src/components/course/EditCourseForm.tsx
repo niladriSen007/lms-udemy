@@ -82,7 +82,7 @@ const EditCourseForm = ({
       const { data } = await axios.put(`/api/course/${course?.csId}`, values)
       toast.success("Course updated successfully")
       router.refresh()
-    } catch (error) {
+    } catch (error:any) {
       console.log("Failed to update the course", error)
       toast.error("Something went wrong!")
     }
@@ -136,7 +136,7 @@ const EditCourseForm = ({
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Title</FormLabel>
+                <FormLabel>Title<span className="text-red-500">*</span></FormLabel>
                 <FormControl>
                   <Input
                     className="border border-gray-400/60"
@@ -154,7 +154,7 @@ const EditCourseForm = ({
             name="subTitle"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Sub title</FormLabel>
+                <FormLabel>Sub title<span className="text-red-500">*</span></FormLabel>
                 <FormControl>
                   <Input
                     className="border border-gray-400/60"
@@ -172,7 +172,7 @@ const EditCourseForm = ({
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>Description<span className="text-red-500">*</span></FormLabel>
                 <FormControl>
                   <RichEditor placeholder="Description" {...field} />
                 </FormControl>

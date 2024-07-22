@@ -9,7 +9,12 @@ export const getAllCategories = async () => {
       name: "asc",
     },
     include: {
-      subCategories: true,
+      subCategories: {
+        orderBy: {
+          name: "asc",
+        },
+      
+      },
     },
   })
 }
@@ -25,24 +30,20 @@ export const getInstructorCourses = async (userId: string) => {
   })
 }
 
-export const getCourseDetails = async (courseId: string, userId: string) => {
+export const getCourseDetails = async (courseId: string) => {
   if (!courseId) {
     return null
-  }
-
-  if (!userId) {
-    return redirect("/sign-in")
   }
   return await prismaDb.course.findUnique({
     where: {
       csId: courseId,
-      instructorId: userId,
     },
     include: {
       section: {
-        orderBy: {
-          position: "asc",
-        },
+       
+       orderBy: {
+        position: "asc",
+      },
       },
     },
   })
@@ -64,6 +65,54 @@ export const getSectionDetails = async (
     include: {
       muxData: true,
       resources: true,
+    },
+  })
+}
+
+export const getAllCourses = async () => {
+  return await prismaDb.course.findMany({
+    where:{isPublished: true},
+    include: {
+      category: true,
+      subCategory: true,
+      Level: true,
+      section:{
+        where:{
+          isPublished: true
+        }
+      }
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  })
+}
+
+export const getCourseByCategory = async (categoryId: string) => {
+  return await prismaDb.course.findMany({
+    where: {
+      categoryId: categoryId,
+    },
+    include: {
+      category: true,
+      subCategory: true,
+      Level: true,
+      section:{
+        where:{
+          isPublished: true
+        }
+      }
+    },
+    orderBy: {
+      createdAt: "desc",
+    },  
+  })
+}
+
+export const getLevelById = async (levelId: string) => {
+  return await prismaDb.level.findUnique({
+    where: {
+      lvlId: levelId,
     },
   })
 }

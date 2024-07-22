@@ -5,12 +5,12 @@ import {
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import "@uploadthing/react/styles.css";
 import type { Metadata } from "next";
-import { Signika_Negative } from "next/font/google";
+import { Sen, Shadows_Into_Light_Two, Shanti, Shippori_Mincho, Shrikhand, Signika_Negative } from "next/font/google";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
 import "./globals.css";
 
-const inter = Signika_Negative({ subsets: ["latin"] })
+const inter = Sen({ weight: "400" ,subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Alpha Vision",
